@@ -1,0 +1,300 @@
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    list-style: none;
+    color: grey;
+    font-size: .97em;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+aside img{
+    width: 100%;
+}
+
+.flex{
+    display: flex;
+}
+
+.space-between{
+    justify-content: space-between;
+}
+
+.error{
+    border: 1px solid red !important;
+}
+
+.showED{
+    background-color: white;
+    width: 25%;
+    margin-left: 75%;
+    margin-top: -5%;
+    display: none;
+    /* padding: 2%; */
+}
+.showED p{
+    padding: 5%;
+}
+.showED p:hover{
+    background-color: #c8e1f51c;
+}
+
+header{
+    margin: 2% 5%;
+    justify-content: space-between;
+}
+.home{
+    width: 33%;
+    /* height: 100vh; */
+    margin: 5% auto 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.home img{
+    width: 100%;
+}
+
+.checked {
+    text-align: left;
+}
+
+.line{
+    text-decoration: line-through;
+}
+
+#done{
+    text-decoration: none ;
+}
+
+.signup{
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.signup a{
+    text-decoration: underline;
+}
+
+.big-todo{
+    font-size: 5em;
+    letter-spacing: -8px;
+}
+.todo{
+    font-size: 2em;
+}
+.blue{
+    color: #0052ff4a;
+}
+.red{
+    color: #dc38386e;
+}
+.green{
+    color: #63de023b;
+}
+.purple{
+    color: #9973ff66;
+}
+
+.p{
+    color: grey;
+    font-size: 1.3em;
+    margin: 5% 0;
+
+}
+.btn{
+    background: #595959;
+    padding: 2% 7%;
+    border-radius: 10px;
+    margin: 5% 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border: none;
+
+}
+.btnn{
+    padding: 1% 2%;
+    margin: 0;
+
+}
+.btnnn{
+    padding: 10% 20%;
+    margin: 10% 0;
+}
+button{
+    background: #595959;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+aside{
+    width: 20%;
+    height: 100vh;
+    padding: 0% 2%;
+    /* background-color: aquamarine; */
+}
+.list{
+    width: 90%;
+}
+.list .p{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    /* justify-content: center; */
+    margin: 5% 0 15%;
+    
+}
+
+.circles{
+    width: 15%;
+    height: 30px;
+    margin-right: 5%;
+    border-radius: 50%;
+}
+
+main{
+    width: 80%;
+    height: 100vh;
+    padding: 0 2%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    
+}
+.grid-items{
+    width: 100%;
+    height: fit-content;
+    background: #e7b82c29;
+    border-radius: 10px;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+}
+.grid-items h2{
+    font-size: 1.5em;
+    margin-bottom: 5%;
+}
+.grid-items p{
+    font-size: 1.1em;
+}
+
+.checkbox{
+    margin-left: 80%;
+    display: flex;
+    text-align: right;
+}
+.done-check{
+    margin-right: 10%;
+
+}
+
+.big-div{
+    width: 50%;
+    height: 70vh;
+    border-radius: 20px;
+    box-shadow: 0px 0px 15px 1px #80808080;
+    margin: 5% 25%;
+    padding: 0 5%;
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: 0;
+}
+
+.backgroundChange{
+    background-color: #6b626226;
+    opacity: 0.9;
+}
+
+.desc{
+    justify-content: space-between;
+}
+.cancel{
+    border: none;
+    background: white;
+    color: #595959;
+}
+
+.form{
+    flex-direction: column;
+}
+
+label{
+    font-size: 1.5em;
+    margin: 5% 0 2%;
+}
+.form .input{
+    border: none;
+    background: #8080800d;
+    border-radius: 10px;
+    padding: 3%;
+}
+
+.form input{
+    padding: 3% ;
+}
+
+.myForm{
+    width: 30%;
+    margin: 10% auto;
+    /* background: red; */
+}
+
+.myForm h2{
+    font-size: 1.5em;
+    text-align: center;
+    margin: 10% auto;
+}
+
+.myForm input{
+    width: 100%;
+    padding: 2%;
+    margin: 2% auto;
+    border-radius: 10px;
+    border: 1px solid #595959;
+}
+
+.myForm label{
+    font-size: 1.2em;
+    margin: 5% 0 2%;
+}
+
+.myForm .btn{
+    width: 100%;
+}
+
+
+
+@media screen and (max-width:800px) {
+    .home {
+        width: 80%;
+    }
+    .flex{
+        display: block;
+    }
+    aside{
+        width: 40%;
+    }
+    main{
+        width: 60%;
+        grid-template-columns: 1fr;
+    }
+    .btnn {
+        padding: 1% 5%;
+    }
+    .checkbox {
+        text-align: right;
+        margin-left: 70%;
+
+    }
+    .big-div {
+        width: 80%;
+    }
+}

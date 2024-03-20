@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <title>Signup</title>
+</head> 
+<body>
+    <form class="myForm" id="signupForm">
+        <h2>Signup for the ToDo App</h2>
+        <label for="name">Please enter your name</label> <br>
+        <input id="name" type="text" placeholder="John Doe" autocomplete="name"> <br> <br>
+
+        <label for="email">Please enter your email</label> <br>
+        <input id="email" type="email" placeholder="h@example.com" autocomplete="email"> <br> <br>
+
+        <label for="password">Please enter your password</label> <br>
+        <input id="password" type="text" placeholder="****" autocomplete="password"> <br> <br>
+
+
+        <input type="submit" value="Submit">
+        
+        <p class="signup">Already have an account? <a href="./login.html">Click to Login</a></p>
+    </form>
+
+    <!-- <a id="signup"class="btn" href="" onclick="validateInputs()">
+         href="./login.html" 
+        <button type="submit">Signup</button>
+    </a> -->
+
+    <script src="./script.js"></script>
+</body>
