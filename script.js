@@ -179,16 +179,25 @@ function getCategories() {
 
 function addAllCategories(tagObjects) {
     let categoryListNode = $('#categoryList')
+    let taskTagsListnodes = $("#taskTags")
     categoryListNode.empty()
+    taskTagsListnodes.empty()
+
     tagObjects.forEach(tagObject => {
         let color = tagObject.color
         let name = tagObject.title
+        let id = tagObject.id
 
-        categoryListNode.append('<div class="p">' + 
+        categoryListNode.append(`<div class="p" >` + 
         `<div class="circles" style="background: ${color}">` + '</div>' +
         `<div class="div">${name}</div>` +
+        `<div class="deleteTag"> <i class="fa fa-trash " id=${id} aria-hidden="true"></i> </div>` +
         '</div>');
+
+        taskTagsListnodes.append(`<option value=${id}> ${name} </option>`)
     });
+
+
 }
 
 function addNewCategory(){
@@ -222,9 +231,31 @@ function addNewCategory(){
     }
 }
 
-// function showEditDelete(){
-//     $(".showED").toggle();
-// }
+$("#logout").click(function (e) { 
+    e.preventDefault();
+    clearUserId()
+    window.location.href = "/index.html"
+});
+
+
+$("#categoryList").on('click', '.deleteTag', function (e) { 
+    e.preventDefault();
+    let id = e.target.id
+    // console.log(e, id);
+    $.ajax({
+        type: "delete",
+        url: `http://todo.reworkstaging.name.ng/v1/tags/${id}`,
+        dataType: "json",
+        success: function (response) {
+            // alert(`deleted tag and its tasks`)
+            getCategories()
+        }
+    });
+});
+
+//working fine
+
+
 
 function addNewTodo(){
     if(!$("#addnewtodo").val()){
