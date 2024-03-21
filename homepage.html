@@ -14,29 +14,13 @@
 <body id="entirepage" onload="getTagsAndTasks()">
     <header class="flex">
         <p class="todo">todo</p>
-        <!-- <a  class="btn btnn" href="./addT.html"> -->
             <button onclick={addTodo()} class="btn btnn">Add ToDo</button>
-        <!-- </a> --> 
     </header>
     <div class="flex">
+        
         <aside class="userCategories">
             <div class="list" id="categoryList">
-                <!-- <div class="p">
-                    <div class="circles purplee"></div>
-                    <div class="div">Work</div>
-                </div>
-                <div class="p">
-                    <div class="circles bluee"></div>
-                    <div>Study</div>
-                </div>
-                <div class="p">
-                    <div class="circles redd"></div>
-                    <div>Entertainment</div>
-                </div>
-                <div class="p">
-                    <div class="circles greenn"></div>
-                    <div>Family</div>
-                </div> -->
+                
             </div>
 
             <button onclick={addCategory()} class="btn btnnn">Add Category</button>
@@ -49,38 +33,7 @@
 
         </aside>
         <main id="mainTasks">
-                <!-- <div class="grid-items">
-                    <div class="flex space-between">
-                        <h2>Task Title</h2>
-                        <h2 class="ed" onclick={showEditDelete()}>...</h2>
-                    </div>
-                    <div class="showED" id="showED">
-                        <p>Edit</p>
-                        <p>Delete</p>
-                    </div>
-                    <p class="desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                        Distinctio aliquam impedit cumque ullam neque et ipsa. Fugit possimus dolore officia.</p>
-                        <div class="checkbox">
-                            <input onclick={onCheck()} class="done-check" type="checkbox" name="done" id=""><p>Done</p>
-                        </div>
-                </div>
-                <div class="grid-items">
-                    <h2>Task Title</h2>
-                    <p class="desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                        Distinctio aliquam impedit cumque ullam neque et ipsa. Fugit possimus dolore officia.</p>
-                        <div class="checkbox">
-                            <input onclick={onCheck()} class="done-check" type="checkbox" name="done" id=""><p>Done</p>
-                        </div>
-                </div>
-                <div class="grid-items">
-                    <h2>Task Title</h2>
-                    <p class="desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                        Distinctio aliquam impedit cumque ullam neque et ipsa. Fugit possimus dolore officia.</p>
-                        <div class="checkbox">
-                            <input onclick={onCheck()} class="done-check" type="checkbox" name="done" id=""><p>Done</p>
-                        </div>
-                </div> -->
-
+              
         </main>
 
     </div>

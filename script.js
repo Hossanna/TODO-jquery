@@ -1,3 +1,8 @@
+const userID = "userID"
+let tagNameToColor = {}
+
+
+//signup
 $("#signupForm").submit(function (e) { 
     e.preventDefault();
 
@@ -29,6 +34,7 @@ $("#signupForm").submit(function (e) {
     });
 });
 
+//validate that a field is not empty
 function validateNotEmpty(className) {
     if(!$("#"+className).val()){
         $("#"+className).addClass("error")
@@ -40,6 +46,7 @@ function validateNotEmpty(className) {
     }
 }
 
+//validate number of characters
 function validateLength(className, length){
     if($("#"+className).val().length < length){
         $("#"+className).addClass("error")
@@ -54,6 +61,7 @@ function validateLength(className, length){
     }
 }
 
+//login
 $("#loginForm").submit(function (e) { 
     e.preventDefault();
 
@@ -94,6 +102,7 @@ $("#loginForm").submit(function (e) {
 //if user doesnt exist, it still returns successful
 //tag names are not unique but are being sent back within tasks so im not able to get the particular tag if its more than one
 
+//manual bypass for endpoint returning non-200 status within response
 function notYetSuccess(res, message) {
     if (typeof res.code === 'undefined' || res.code === 200) {
         alert(message)
@@ -110,12 +119,14 @@ function notYetSuccess(res, message) {
     }
 }
 
+//log out
 $("#logout").click(function (e) { 
     e.preventDefault();
     clearUserId()
     window.location.href = "./index.html"
 });
 
+//show add todo menu
 function addTodo(){
 
     $("#showaddtodo").show()
@@ -132,6 +143,7 @@ function addTodo(){
     $("#entirepage").addClass("backgroundChange");
 }
 
+//show add category menu
 function addCategory(){
     $("#showaddcategory").show()
     $("#cancell").click(function (e) { 
@@ -143,9 +155,6 @@ function addCategory(){
 
     $("#entirepage").addClass("backgroundChange");
 }
-
-
-const userID = "userID"
 
 function storeUserId(id) {
     localStorage.setItem(userID, id)
@@ -163,6 +172,7 @@ function getUserId() {
     }
 }
 
+//get existing categories for a user
 function getUserCategories(id){
     $.ajax({
         type: "get",
@@ -177,6 +187,7 @@ function getUserCategories(id){
     });
 }
 
+//get all categories for an existing user
 function getCategories() {
     let {success, userID} = getUserId()
     if (success) {
@@ -184,8 +195,7 @@ function getCategories() {
     }
 }
 
-let tagNameToColor = {}
-
+//render all categories
 function addAllCategories(tagObjects) {
     let categoryListNode = $('#categoryList')
     let taskTagsListnodes = $("#taskTags")
@@ -207,10 +217,9 @@ function addAllCategories(tagObjects) {
 
         taskTagsListnodes.append(`<option value=${id}> ${name} </option>`)
     });
-
-
 }
 
+//add new category
 function addNewCategory(){
     if(!$("#category").val() || !$("#color").val()){
         alert("Please add a category and color")
@@ -242,9 +251,7 @@ function addNewCategory(){
     }
 }
 
-
-
-
+//delete category
 $("#categoryList").on('click', '.deleteTag', function (e) { 
     e.preventDefault();
     let id = e.target.id
@@ -260,8 +267,7 @@ $("#categoryList").on('click', '.deleteTag', function (e) {
     });
 });
 
-//working fine
-
+//get existing tasks for a user
 function getUserTasks(id){
     $.ajax({
         type: "get",
@@ -278,6 +284,7 @@ function getUserTasks(id){
     });
 }
 
+//get tasks for an existing user
 function getTasks(){
     let {success, userID} = getUserId()
     if (success){
@@ -285,6 +292,7 @@ function getTasks(){
     }
 }
 
+//render all tasks
 function addAllTasks(tasksObjects) {
     let taskListNode = $('#mainTasks')
     taskListNode.empty()
@@ -308,8 +316,8 @@ function addAllTasks(tasksObjects) {
                     <h2 class="ed" id=${id}>...</h2>
                 </div>
                 <div class="showED showED-${id}">
-                        <p>Edit</p>
-                        <p>Delete</p>
+                        <p class="editTask" id=${id}>Edit</p>
+                        <p class="deleteTask" id=${id}>Delete</p>
                 </div>
                 <p class="desc ${line}"> ${description} </p>
                 <div class="small-circles circles" style="background: ${color}"></div>
@@ -324,6 +332,7 @@ function addAllTasks(tasksObjects) {
     });
 }
 
+//mark tasks as completed/checked
 $("#mainTasks").on('click', '.done-check', function (e) { 
     e.preventDefault();
     let id = e.target.id
@@ -345,6 +354,7 @@ $("#mainTasks").on('click', '.done-check', function (e) {
     });
 });
 
+//show delete and edit menu
 $("#mainTasks").on('click', '.ed', function (e) { 
     e.preventDefault();
     let id = e.target.id
@@ -352,6 +362,21 @@ $("#mainTasks").on('click', '.ed', function (e) {
     $(`.showED-${id}`).toggle();
 });
 
+//delete tasks
+$("#mainTasks").on('click', '.deleteTask', function (e) { 
+    e.preventDefault();
+    let id = e.target.id
+    // console.log(e, id);
+    $.ajax({
+        type: "delete",
+        url: `http://todo.reworkstaging.name.ng/v1/tasks/${id}`,
+        dataType: "json",
+        success: function (response) {
+            // alert(`deleted tag and its tasks`)
+            getTasks()
+        }
+    });
+});
 
 function addNewTodo(){
     if(!$("#addnewtodo").val()){
@@ -387,37 +412,9 @@ function addNewTodo(){
     }
 }
 
-
+//get all tasks and categories
 function getTagsAndTasks(){
     getCategories()
     getTasks()
 }
-
-
-function onCheck(){
-
-
-    // $(".checkbox").toggleClass("line");
-
-    // if ($(".done-check").is(":checked")){
-        $(".grid-items h2").toggleClass("line");
-        $(".grid-items .desc").toggleClass("line");
-
-        // console.log($(".checkbox"));
-        // console.log(this.parent());
-        console.log("test");
-    // }
-
-}
-
-$(".ed").click(function (e) { 
-    e.preventDefault();
-    $(".showED").toggle();
-    
-});
-
-
-
-
-
 
