@@ -1,5 +1,8 @@
 const userID = "userID"
 let tagNameToColor = {}
+let tagIdToName = {}
+let taskIdToNameAndContent = {}
+const api = `http://todo.reworkstaging.name.ng/v1`
 
 
 //signup
@@ -22,7 +25,7 @@ $("#signupForm").submit(function (e) {
 
     $.ajax({
         type: "post",
-        url: "http://todo.reworkstaging.name.ng/v1/users",
+        url: `${api}/users`,
         data: submitObject,
         dataType: "json",
         success: function (res) {
@@ -80,7 +83,7 @@ $("#loginForm").submit(function (e) {
 
     $.ajax({
         type: "post",
-        url: "http://todo.reworkstaging.name.ng/v1/users/login",
+        url: `${api}/users/login`,
         data: submitObject,
         dataType: "json",
         success: function (res) {
@@ -128,7 +131,6 @@ $("#logout").click(function (e) {
 
 //show add todo menu
 function addTodo(){
-
     $("#showaddtodo").show()
     $("#cancel").click(function (e) { 
         e.preventDefault();
@@ -176,7 +178,7 @@ function getUserId() {
 function getUserCategories(id){
     $.ajax({
         type: "get",
-        url: `http://todo.reworkstaging.name.ng/v1/tags?user_id=${id}`,
+        url: `${api}/tags?user_id=${id}`,
         dataType: "json",
         success: function (res) {
             addAllCategories(res)
@@ -207,11 +209,12 @@ function addAllCategories(tagObjects) {
         let name = tagObject.title
         let id = tagObject.id
         tagNameToColor[name] = color
+        tagIdToName[id] = name
         //names have to be unique else it will override!! return the id
 
-        categoryListNode.append(`<div class="p" >` + 
+        categoryListNode.append(`<div class="p selectedTag" id=${id} >` + 
         `<div class="circles" style="background: ${color}">` + '</div>' +
-        `<div class="div">${name}</div>` +
+        `<div class="div" id=${id}>${name}</div>` +
         `<div class="deleteTag"> <i class="fa fa-trash " id=${id} aria-hidden="true"></i> </div>` +
         '</div>');
 
@@ -236,7 +239,7 @@ function addNewCategory(){
     
             $.ajax({
                 type: "post",
-                url: "http://todo.reworkstaging.name.ng/v1/tags",
+                url: `${api}/tags`,
                 data: submitObject,
                 dataType: "json",
                 success: function (res) {
@@ -258,7 +261,7 @@ $("#categoryList").on('click', '.deleteTag', function (e) {
     // console.log(e, id);
     $.ajax({
         type: "delete",
-        url: `http://todo.reworkstaging.name.ng/v1/tags/${id}`,
+        url: `${api}/tags/${id}`,
         dataType: "json",
         success: function (response) {
             // alert(`deleted tag and its tasks`)
@@ -271,11 +274,11 @@ $("#categoryList").on('click', '.deleteTag', function (e) {
 function getUserTasks(id){
     $.ajax({
         type: "get",
-        url: `http://todo.reworkstaging.name.ng/v1/tasks?user_id=${id}`,
+        url: `${api}/tasks?user_id=${id}`,
         // data: "data",
         dataType: "json",
         success: function (response) {
-            console.log(response);
+            // console.log(response);
             addAllTasks(response)
         },
         error: function (err) {
@@ -292,10 +295,41 @@ function getTasks(){
     }
 }
 
+function getTasksForTag(tagID){
+    $.ajax({
+        type: "get",
+        url: `${api}/tags/tasks?tag_id=${tagID}`,
+        // data: "data",
+        dataType: "json",
+        success: function (response) {
+            // console.log(response);
+            response.forEach(task => {
+                task.tag = tagIdToName[tagID]
+            });
+            addAllTasks(response)
+        },
+        error: function (err) {
+            alert(err)
+        }
+    });
+}
+//when retrieving tasks for tags, the task has no tag name and tag id
+
+//selected tags tasks
+$("#categoryList").on('click', '.selectedTag', function (e) { 
+    e.preventDefault();
+    let id = e.target.id
+    // console.log(id);
+    getTasksForTag(id)
+});
+
 //render all tasks
 function addAllTasks(tasksObjects) {
     let taskListNode = $('#mainTasks')
     taskListNode.empty()
+
+    let hiddenDoneTasks = $("#hiddenTasks").is(":checked")
+    // console.log(hiddenDoneTasks);
 
     tasksObjects.forEach(tasksObject => {
         let title = tasksObject.title
@@ -306,8 +340,18 @@ function addAllTasks(tasksObjects) {
            checked = "checked"
            line = "line"
         }
+        
+        if(tasksObject.completed && hiddenDoneTasks){
+            return
+        }
+
         let id = tasksObject.id
         let color = tagNameToColor[tasksObject.tag]
+        // console.log(color);
+        taskIdToNameAndContent[id] = {
+            title: title,
+            content: description,
+        }
 
         taskListNode.append(
             `<div class="grid-items"> 
@@ -344,7 +388,7 @@ $("#mainTasks").on('click', '.done-check', function (e) {
 
     $.ajax({
         type: "put",
-        url: `http://todo.reworkstaging.name.ng/v1/tasks/${id}/set-completed`,
+        url: `${api}/tasks/${id}/set-completed`,
         dataType: "json",
         data: submitObject,
         success: function (response) {
@@ -369,7 +413,7 @@ $("#mainTasks").on('click', '.deleteTask', function (e) {
     // console.log(e, id);
     $.ajax({
         type: "delete",
-        url: `http://todo.reworkstaging.name.ng/v1/tasks/${id}`,
+        url: `${api}/tasks/${id}`,
         dataType: "json",
         success: function (response) {
             // alert(`deleted tag and its tasks`)
@@ -389,14 +433,15 @@ function addNewTodo(){
         let {success, userID} = getUserId()
         if (success) {
             let submitObject  = {
-                "tag_id": userID,
+                "tag_id": $("#taskTags").val(),
                 "title": $("#addnewtodo").val(),
                 "content": $("#description").val()
             }
+            // console.log(submitObject);
     
             $.ajax({
                 type: "post",
-                url: "http://todo.reworkstaging.name.ng/v1/tasks",
+                url: `${api}/tasks`,
                 data: submitObject,
                 dataType: "json",
                 success: function (res) {
@@ -418,3 +463,48 @@ function getTagsAndTasks(){
     getTasks()
 }
 
+
+//open edit todo menu
+$("#mainTasks").on('click', '.editTask', function (e) { 
+    let task = taskIdToNameAndContent[e.target.id]
+    $(".editTodoButton").attr("id", e.target.id);
+    $("#showeditodo").show()
+    $("#entirepage").addClass("backgroundChange");
+
+    $("#edittodo").val(`${task.title}`) 
+    $("#editdescription").val(`${task.content}`) 
+
+
+    $("#canceledit").click(function (e) { 
+        e.preventDefault();
+        $("#showeditodo").hide()
+        $("#entirepage").removeClass("backgroundChange");
+
+        $("#edittodo").val("")
+        $("#editdescription").val("")
+
+    });
+
+});
+
+//edit todo
+function editTodo(){
+    let id = $(".editTodoButton").attr("id");
+    // console.log(id);
+    let submitObject = {
+        title: $("#edittodo").val(),
+        content: $("#editdescription").val()
+    }
+    $.ajax({
+        type: "put",
+        url: `${api}/tasks/${id}`,
+        dataType: "json",
+        data: submitObject,
+        success: function (response) {
+            getTasks()
+        }
+    });
+}
+
+
+//hide done tasks

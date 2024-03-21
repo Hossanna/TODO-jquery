@@ -17,7 +17,7 @@
             <button onclick={addTodo()} class="btn btnn">Add ToDo</button>
     </header>
     <div class="flex">
-        
+
         <aside class="userCategories">
             <div class="list" id="categoryList">
                 
@@ -26,7 +26,7 @@
             <button onclick={addCategory()} class="btn btnnn">Add Category</button>
 
             <div class="p flex">
-                <input class="done-check" type="checkbox" name="done" id=""><p>Hide Done Tasks</p>
+                <input class="done-check" type="checkbox" name="done" id="hiddenTasks" onclick="getTasks()"><p>Hide Done Tasks</p>
             </div>
 
             <img src="./images/homepage.jpeg" alt="">
@@ -72,6 +72,23 @@
 
             <label for="color">Pick a color</label>
             <input class="input" id="color" type="color" placeholder="pick your color">
+
+        </div>
+    </div>
+
+    <div id="showeditodo" class="big-div">
+        <div class="flex desc">
+            <button id="canceledit" class="cancel">Cancel</button>
+            <button onclick={editTodo()} class="btn editTodoButton">Edit ToDo</button>
+
+        </div>
+
+        <div class="flex form">
+            <label for="title">Title</label>
+            <input class="input" id="edittodo" type="text" placeholder="edit title ...">
+
+            <label for="description">Description</label>
+            <textarea class="input" id="editdescription" name="description" id="description" cols="30" rows="10" placeholder="edit description ..."></textarea>
 
         </div>
     </div>
