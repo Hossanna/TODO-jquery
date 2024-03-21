@@ -79,7 +79,7 @@ $("#loginForm").submit(function (e) {
             let {success, response} = notYetSuccess(res, "Login successful")
             if(success){
                 storeUserId(response.id)
-                window.location.href = "/homepage.html"
+                window.location.href = "./homepage.html"
             }
         },
         error: function (err) {
@@ -92,6 +92,7 @@ $("#loginForm").submit(function (e) {
 //creating an existing user again
 //giving response code for 200 when status is a different thing
 //if user doesnt exist, it still returns successful
+//tag names are not unique but are being sent back within tasks so im not able to get the particular tag if its more than one
 
 function notYetSuccess(res, message) {
     if (typeof res.code === 'undefined' || res.code === 200) {
@@ -108,6 +109,12 @@ function notYetSuccess(res, message) {
         }
     }
 }
+
+$("#logout").click(function (e) { 
+    e.preventDefault();
+    clearUserId()
+    window.location.href = "./index.html"
+});
 
 function addTodo(){
 
@@ -177,6 +184,8 @@ function getCategories() {
     }
 }
 
+let tagNameToColor = {}
+
 function addAllCategories(tagObjects) {
     let categoryListNode = $('#categoryList')
     let taskTagsListnodes = $("#taskTags")
@@ -187,6 +196,8 @@ function addAllCategories(tagObjects) {
         let color = tagObject.color
         let name = tagObject.title
         let id = tagObject.id
+        tagNameToColor[name] = color
+        //names have to be unique else it will override!! return the id
 
         categoryListNode.append(`<div class="p" >` + 
         `<div class="circles" style="background: ${color}">` + '</div>' +
@@ -231,11 +242,7 @@ function addNewCategory(){
     }
 }
 
-$("#logout").click(function (e) { 
-    e.preventDefault();
-    clearUserId()
-    window.location.href = "/index.html"
-});
+
 
 
 $("#categoryList").on('click', '.deleteTag', function (e) { 
@@ -248,13 +255,102 @@ $("#categoryList").on('click', '.deleteTag', function (e) {
         dataType: "json",
         success: function (response) {
             // alert(`deleted tag and its tasks`)
-            getCategories()
+            getTagsAndTasks()
         }
     });
 });
 
 //working fine
 
+function getUserTasks(id){
+    $.ajax({
+        type: "get",
+        url: `http://todo.reworkstaging.name.ng/v1/tasks?user_id=${id}`,
+        // data: "data",
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+            addAllTasks(response)
+        },
+        error: function (err) {
+            alert(err)
+        }
+    });
+}
+
+function getTasks(){
+    let {success, userID} = getUserId()
+    if (success){
+        getUserTasks(userID)
+    }
+}
+
+function addAllTasks(tasksObjects) {
+    let taskListNode = $('#mainTasks')
+    taskListNode.empty()
+
+    tasksObjects.forEach(tasksObject => {
+        let title = tasksObject.title
+        let description = tasksObject.content
+        let checked = ""
+        let line = checked
+        if(tasksObject.completed) {
+           checked = "checked"
+           line = "line"
+        }
+        let id = tasksObject.id
+        let color = tagNameToColor[tasksObject.tag]
+
+        taskListNode.append(
+            `<div class="grid-items"> 
+                <div class="flex space-between">
+                    <h2 class = "${line}"> ${title} </h2>
+                    <h2 class="ed" id=${id}>...</h2>
+                </div>
+                <div class="showED showED-${id}">
+                        <p>Edit</p>
+                        <p>Delete</p>
+                </div>
+                <p class="desc ${line}"> ${description} </p>
+                <div class="small-circles circles" style="background: ${color}"></div>
+                <div class="checkbox">
+                    <input ${checked} id=${id} class="done-check" type="checkbox" name="done">
+                    <p>Done</p>
+                </div>
+            </div>`
+        
+        );
+
+    });
+}
+
+$("#mainTasks").on('click', '.done-check', function (e) { 
+    e.preventDefault();
+    let id = e.target.id
+
+
+    let submitObject  = {
+        completed: e.target.checked
+    }
+
+    $.ajax({
+        type: "put",
+        url: `http://todo.reworkstaging.name.ng/v1/tasks/${id}/set-completed`,
+        dataType: "json",
+        data: submitObject,
+        success: function (response) {
+            // alert(`deleted tag and its tasks`)
+            getTasks()
+        }
+    });
+});
+
+$("#mainTasks").on('click', '.ed', function (e) { 
+    e.preventDefault();
+    let id = e.target.id
+    // console.log(id);
+    $(`.showED-${id}`).toggle();
+});
 
 
 function addNewTodo(){
@@ -265,43 +361,37 @@ function addNewTodo(){
         alert("Please add a description")
     }
     else{
-        let newTitle = $("#addnewtodo").val()
-        let newDesc = $("#description").val()
-
-        let userTodo = JSON.parse(localStorage.getItem('formData')) || [];
-
-        let allData = {
-            title: newTitle,
-            description: newDesc,
-        };
-
-        userTodo.push(allData);
-
-        localStorage.setItem('formData', JSON.stringify(userTodo));
-
-        // alert($("#addnewtodo").val() + "\n" + $("#description").val())
-        $("#main").append(
-        '<div class="grid-items">' + 
-            '<div class="flex space-between">'+
-                '<h2>' + $("#addnewtodo").val() + '</h2>' +
-                '<h2 class="ed" onclick={showEditDelete()}>'+ "..."  + '</h2>' +
-            '</div>' +
-            '<div class="showED" id="showED">'+
-                '<p>' + "Edit" + '</p>' +
-                '<p>'+ "Delete"  + '</p>' +
-            '</div>' +
-            '<p class="desc">' + $("#description").val() + '</p>' +
-            '<div class="checkbox">' + 
-                '<input onclick={onCheck()} class="done-check" type="checkbox" name="done">' +
-                '<p>' + "Done" + '</p>' +
-            '</div>'+ 
-        '</div>');
-
+        let {success, userID} = getUserId()
+        if (success) {
+            let submitObject  = {
+                "tag_id": userID,
+                "title": $("#addnewtodo").val(),
+                "content": $("#description").val()
+            }
+    
+            $.ajax({
+                type: "post",
+                url: "http://todo.reworkstaging.name.ng/v1/tasks",
+                data: submitObject,
+                dataType: "json",
+                success: function (res) {
+                    getUserTasks(userID)
+                },
+                error: function (err) {
+                    alert(err.responseJSON.msg)
+                }
+            });
+        }
         $("#addnewtodo").val("")
         $("#description").val("")
     }
 }
 
+
+function getTagsAndTasks(){
+    getCategories()
+    getTasks()
+}
 
 
 function onCheck(){

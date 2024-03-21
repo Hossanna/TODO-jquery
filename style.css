@@ -45,17 +45,18 @@ select{
 
 .showED{
     background-color: white;
-    width: 25%;
+    width: 30%;
     margin-left: 75%;
     margin-top: -5%;
     display: none;
+    border-radius: 10px;
     /* padding: 2%; */
 }
 .showED p{
     padding: 5%;
 }
 .showED p:hover{
-    background-color: #c8e1f51c;
+    background-color: #edecec;
 }
 
 header{
@@ -164,16 +165,28 @@ aside{
     display: flex;
     width: 100%;
     align-items: center;
+    padding: 5%;
     /* justify-content: center; */
-    margin: 5% 0 15%;
+    margin: 5% 0 5%;
     
+}
+.list .p:hover{
+    background-color: #edecec;
+    border-radius: 10px;
+}
+.list .deleteTag{
+    margin-left: 10%;
 }
 
 .circles{
-    width: 15%;
+    width: 17%;
     height: 30px;
     margin-right: 5%;
     border-radius: 50%;
+}
+.small-circles{
+    width: 7%;
+    margin-top: 5%;
 }
 
 main{
