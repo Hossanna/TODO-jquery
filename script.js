@@ -63,7 +63,17 @@ function validateLength(className, length) {
   }
 }
 
+// function validateEmail(email) {
+//   return String(email)
+//     .toLowerCase()
+//     .match(
+//       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+//     );
+// };
+
 //login
+
+
 $("#loginForm").submit(function (e) {
   e.preventDefault();
 
@@ -196,9 +206,21 @@ function getCategories() {
 function addAllCategories(tagObjects) {
   let categoryListNode = $("#categoryList");
   let taskTagsListnodes = $("#taskTags");
+  let firstAddTodoButton = $("#firstAddTodoButton")
+
   categoryListNode.empty();
   taskTagsListnodes.empty();
 
+  let isTagObjEmpty = tagObjects.length  === 0
+  if (isTagObjEmpty){
+    firstAddTodoButton.attr("disabled", true)
+    firstAddTodoButton.addClass("addtodo-disabled");
+  }
+  else{
+    firstAddTodoButton.attr("disabled", false)
+    firstAddTodoButton.removeClass("addtodo-disabled");
+  }
+  // console.log(isTagObjEmpty);
   tagObjects.forEach((tagObject) => {
     let color = tagObject.color;
     let name = tagObject.title;
@@ -208,8 +230,8 @@ function addAllCategories(tagObjects) {
     //names have to be unique else it will override!! return the id
 
     categoryListNode.append(
-      `<div class="p selectedTag" id=${id} >` +
-        `<div class="circles" style="background: ${color}">` +
+      `<div class="p">` +
+        `<div class="circles selectedTag" id=${id}  style="background: ${color}">` +
         "</div>" +
         `<div class="div" id=${id}>${name}</div>` +
         `<div class="deleteTag"> <i class="fa fa-trash " id=${id} aria-hidden="true"></i> </div>` +
@@ -255,16 +277,42 @@ $("#categoryList").on("click", ".deleteTag", function (e) {
   e.preventDefault();
   let id = e.target.id;
   // console.log(e, id);
+
+  if (checkTagIfEmpty(id)){
+    if (confirm("Do you want to delete this category?")){
+      $.ajax({
+        type: "delete",
+        url: `${api}/tags/${id}`,
+        dataType: "json",
+        success: function (response) {
+          // alert(`deleted tag and its tasks`)
+          getTagsAndTasks();
+        },
+      });
+    }
+  }
+  else{
+    alert("This category is not empty")
+  }
+});
+
+function checkTagIfEmpty(tagID) {
+  let tagIsEmpty = false
   $.ajax({
-    type: "delete",
-    url: `${api}/tags/${id}`,
+    type: "get",
+    url: `${api}/tags/tasks?tag_id=${tagID}`,
+    // data: "data",
+    async: false,
     dataType: "json",
     success: function (response) {
-      // alert(`deleted tag and its tasks`)
-      getTagsAndTasks();
+      tagIsEmpty = response.length === 0
+    },
+    error: function (err) {
+      alert(err);
     },
   });
-});
+  return tagIsEmpty
+}
 
 //get existing tasks for a user
 function getUserTasks(id) {
@@ -404,15 +452,19 @@ $("#mainTasks").on("click", ".deleteTask", function (e) {
   e.preventDefault();
   let id = e.target.id;
   // console.log(e, id);
-  $.ajax({
-    type: "delete",
-    url: `${api}/tasks/${id}`,
-    dataType: "json",
-    success: function (response) {
-      // alert(`deleted tag and its tasks`)
-      getTasks();
-    },
-  });
+
+  if (confirm("Do you want to delete this task?")){
+    $.ajax({
+      type: "delete",
+      url: `${api}/tasks/${id}`,
+      dataType: "json",
+      success: function (response) {
+        // alert(`deleted tag and its tasks`)
+        getTasks();
+      },
+    });
+  }
+  
 });
 
 function addNewTodo() {
@@ -493,4 +545,13 @@ function editTodo() {
   });
 }
 
-//hide done tasks
+function toggleShowPassword(){
+  let password = $("#password")
+  var passwordType = password.attr("type");
+  
+  if (passwordType === "password") {
+    password.attr("type", "text");
+  } else {
+    password.attr("type", "password");
+  }
+}

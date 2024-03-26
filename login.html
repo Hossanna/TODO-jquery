@@ -18,7 +18,11 @@
         <input id="email" type="email" placeholder="h@example.com" autocomplete="email"> <br> <br>
 
         <label for="password">Please enter your password</label> <br>
-        <input id="password" type="text" placeholder="****" autocomplete="password"> <br> <br>
+        <input id="password" type="password" placeholder="****" autocomplete="password"> <br>
+        <div class="flex user-flex">
+            <input type="checkbox" name="" onclick="toggleShowPassword()" id="showPassword"> 
+            <span>Show password</span>
+        </div> <br><br>
 
         <input type="submit" value="Login">
 
