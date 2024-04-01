@@ -1,0 +1,92 @@
+
+MAIN_URL: http://todo.reworkstaging.name.ng/v1
+NB: SYSTEM SESSION EXPIRES AFTER 2 HOURS
+
+POST /users.
+DESCP create a new user
+BODY
+{
+	"name":"Blake Pearl",
+ 	"email":"abc@gmail.com",
+ 	"password":"123"
+}
+
+POST /users/login.
+DESCP login a user to retrieve the user id 
+BODY
+{
+	"email":"abc@gmail.com",
+	"password":"123"
+}
+
+GET /tags?user_id=123.
+DESCP Get all the tags for a particular user
+
+GET /tags/tasks?tag_id=123.
+DESCP Get all the todos for a particular tag
+
+POST /tags.
+DESCP create a new todo tag
+BODY
+{
+	"user_id":"123",
+	"title":"Work",
+	"color":"#ddd"
+}
+
+PUT /tags/:id.
+DESCP update a todo tag
+BODY
+{
+	title:"Work",
+	color:"#ddd"
+}
+
+
+DELETE /tags/:id.
+DESCP delete a todo tag
+
+GET /tasks?user_id=123.
+DESCP Get all the tasks for a particular user
+
+POST /tasks.
+DESCP create a task for a tag
+BODY
+{
+	tag_id:"123",
+	title:"omnis bene est",
+	content:"vere dico vobis omnia bene. Quod enim dicimus, bene omnia finit"
+}
+
+PUT /tasks/:id
+DESCP to update a task
+BODY
+{
+	title:"omnis bene est",
+	content:"vere dico vobis omnia bene. Quod enim dicimus, bene omnia finit"
+}
+
+PUT /tasks/:task_id/set-completed
+DESCP to mark a task completed
+BODY
+{
+	completed:true | false
+}
+
+PUT /tasks/:task_id/set-color
+DESCP to set fore and back ground color of a task
+BODY
+{
+	fg_color:"#fff",
+	bg_color:"#999"
+}
+
+PUT /tasks/:task_id/set-hidden
+DESCP to hide a task
+BODY
+{
+	hidden:true | false
+}
+
+DELETE /tasks/:id
+DESCP to delete a task
