@@ -1,6 +1,7 @@
 const userID = "userID";
 let tagNameToColor = {};
 let tagIdToName = {};
+let tagIdToDate = {};
 let taskIdToNameAndContent = {};
 const api = `http://todo.reworkstaging.name.ng/v1`;
 
@@ -231,6 +232,7 @@ function addAllCategories(tagObjects) {
 
     tagNameToColor[name] = color;
     tagIdToName[id] = name;
+    tagIdToDate[id] = newDateAndTime
     //names have to be unique else it will override!! return the id
 
     categoryListNode.append(
@@ -343,23 +345,12 @@ function checkTagIfEmpty(tagID) {
 $("#categoryList").on("click", ".TagInfo", function (e) {
   e.preventDefault();
   let id = e.target.id;
-  alert(e.target.className);
-  // console.log(id);
-  // console.log(dateAndTime);
-
-  // let submitObject = {
-  //   created_at: e.target,
-  // };
-
-
-
+  // alert(e.target.className);
+  // console.log(tagIdToDate[id]);
+  let displayDateAndTime = tagIdToDate[id]
+  alert(displayDateAndTime)
+  
 });
-
-function showDateAndTime(){
-  alert(dateAndTime)
-}
-
-
 
 //get existing tasks for a user
 function getUserTasks(id) {
