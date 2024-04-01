@@ -63,17 +63,6 @@ function validateLength(className, length) {
   }
 }
 
-// function validateEmail(email) {
-//   return String(email)
-//     .toLowerCase()
-//     .match(
-//       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-//     );
-// };
-
-//login
-
-
 $("#loginForm").submit(function (e) {
   e.preventDefault();
 
@@ -107,11 +96,6 @@ $("#loginForm").submit(function (e) {
   });
 });
 
-//creating an existing user again
-//giving response code for 200 when status is a different thing
-//if user doesnt exist, it still returns successful
-//tag names are not unique but are being sent back within tasks so im not able to get the particular tag if its more than one
-
 //manual bypass for endpoint returning non-200 status within response
 function notYetSuccess(res, message) {
   if (typeof res.code === "undefined" || res.code === 200) {
@@ -128,13 +112,6 @@ function notYetSuccess(res, message) {
     };
   }
 }
-
-//log out
-$("#logout").click(function (e) {
-  e.preventDefault();
-  clearUserId();
-  window.location.href = "./index.html";
-});
 
 //show add todo menu
 function addTodo() {
@@ -225,10 +202,6 @@ function addAllCategories(tagObjects) {
     let color = tagObject.color;
     let name = tagObject.title;
     let id = tagObject.id;
-    let dateAndTime = tagObject.created_at
-
-    let newDateAndTime = new Date(dateAndTime).toLocaleString()
-
     tagNameToColor[name] = color;
     tagIdToName[id] = name;
     //names have to be unique else it will override!! return the id
@@ -238,22 +211,12 @@ function addAllCategories(tagObjects) {
         `<div class="circles selectedTag" id=${id}  style="background: ${color}">` +
         "</div>" +
         `<div class="div" id=${id}>${name}</div>` +
-
-        `<h2 class="ed" id=${id}>...</h2>` +
-        
-        "</div>" +
-
-        `<div class="showInfoDelete showInfoDelete-${id}">
-          <p class="deleteTag" id=${id}> Delete tag </p>
-          <p class="TagInfo ${newDateAndTime}" id=${id}>Tag Info </p>
-        </div>` 
-// <i class="fa fa-trash " id=${id} aria-hidden="true"></i> 
+        `<div class="deleteTag"> <i class="fa fa-trash " id=${id} aria-hidden="true"></i> </div>` +
+        "</div>"
     );
 
     taskTagsListnodes.append(`<option value=${id}> ${name} </option>`);
   });
-
-  // return dateAndTime
 }
 
 //add new category
@@ -286,14 +249,6 @@ function addNewCategory() {
   }
 }
 
-//show delete and info menu for tags
-$("#categoryList").on("click", ".ed", function (e) {
-  e.preventDefault();
-  let id = e.target.id;
-  // console.log(id);
-  $(`.showInfoDelete-${id}`).toggle();
-});
-
 //delete category
 $("#categoryList").on("click", ".deleteTag", function (e) {
   e.preventDefault();
@@ -317,48 +272,6 @@ $("#categoryList").on("click", ".deleteTag", function (e) {
     alert("This category is not empty")
   }
 });
-
-// check if tag is empty before deleting
-function checkTagIfEmpty(tagID) {
-  let tagIsEmpty = false
-  $.ajax({
-    type: "get",
-    url: `${api}/tags/tasks?tag_id=${tagID}`,
-    // data: "data",
-    async: false,
-    dataType: "json",
-    success: function (response) {
-      tagIsEmpty = response.length === 0
-    },
-    error: function (err) {
-      alert(err);
-    },
-  });
-  return tagIsEmpty
-}
-
-
-
-//show date and time info
-$("#categoryList").on("click", ".TagInfo", function (e) {
-  e.preventDefault();
-  let id = e.target.id;
-  alert(e.target.className);
-  // console.log(id);
-  // console.log(dateAndTime);
-
-  // let submitObject = {
-  //   created_at: e.target,
-  // };
-
-
-
-});
-
-function showDateAndTime(){
-  alert(dateAndTime)
-}
-
 
 
 //get existing tasks for a user
@@ -385,34 +298,6 @@ function getTasks() {
     getUserTasks(userID);
   }
 }
-
-function getTasksForTag(tagID) {
-  $.ajax({
-    type: "get",
-    url: `${api}/tags/tasks?tag_id=${tagID}`,
-    // data: "data",
-    dataType: "json",
-    success: function (response) {
-      // console.log(response);
-      response.forEach((task) => {
-        task.tag = tagIdToName[tagID];
-      });
-      addAllTasks(response);
-    },
-    error: function (err) {
-      alert(err);
-    },
-  });
-}
-//when retrieving tasks for tags, the task has no tag name and tag id
-
-//selected tags tasks
-$("#categoryList").on("click", ".selectedTag", function (e) {
-  e.preventDefault();
-  let id = e.target.id;
-  // console.log(id);
-  getTasksForTag(id);
-});
 
 //render all tasks
 function addAllTasks(tasksObjects) {
@@ -486,34 +371,6 @@ $("#mainTasks").on("click", ".done-check", function (e) {
   });
 });
 
-//show delete and edit menu
-$("#mainTasks").on("click", ".ed", function (e) {
-  e.preventDefault();
-  let id = e.target.id;
-  // console.log(id);
-  $(`.showED-${id}`).toggle();
-});
-
-//delete tasks
-$("#mainTasks").on("click", ".deleteTask", function (e) {
-  e.preventDefault();
-  let id = e.target.id;
-  // console.log(e, id);
-
-  if (confirm("Do you want to delete this task?")){
-    $.ajax({
-      type: "delete",
-      url: `${api}/tasks/${id}`,
-      dataType: "json",
-      success: function (response) {
-        // alert(`deleted tag and its tasks`)
-        getTasks();
-      },
-    });
-  }
-  
-});
-
 function addNewTodo() {
   if (!$("#addnewtodo").val()) {
     alert("Please add a todo");
@@ -553,52 +410,10 @@ function getTagsAndTasks() {
   getTasks();
 }
 
-//open edit todo menu
-$("#mainTasks").on("click", ".editTask", function (e) {
-  let task = taskIdToNameAndContent[e.target.id];
-  $(".editTodoButton").attr("id", e.target.id);
-  $("#showeditodo").show();
-  $("#entirepage").addClass("backgroundChange");
-
-  $("#edittodo").val(`${task.title}`);
-  $("#editdescription").val(`${task.content}`);
-
-  $("#canceledit").click(function (e) {
+//log out
+$("#logout").click(function (e) {
     e.preventDefault();
-    $("#showeditodo").hide();
-    $("#entirepage").removeClass("backgroundChange");
-
-    $("#edittodo").val("");
-    $("#editdescription").val("");
+    clearUserId();
+    window.location.href = "./index.html";
   });
-});
-
-//edit todo
-function editTodo() {
-  let id = $(".editTodoButton").attr("id");
-  // console.log(id);
-  let submitObject = {
-    title: $("#edittodo").val(),
-    content: $("#editdescription").val(),
-  };
-  $.ajax({
-    type: "put",
-    url: `${api}/tasks/${id}`,
-    dataType: "json",
-    data: submitObject,
-    success: function (response) {
-      getTasks();
-    },
-  });
-}
-
-function toggleShowPassword(){
-  let password = $("#password")
-  var passwordType = password.attr("type");
   
-  if (passwordType === "password") {
-    password.attr("type", "text");
-  } else {
-    password.attr("type", "password");
-  }
-}

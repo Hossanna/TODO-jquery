@@ -74,6 +74,18 @@ input[type=email]:invalid{
     border: 1px solid red !important;
 }
 
+.showInfoDelete{
+    /* background-color: white; */
+    border: 1px solid grey;
+    width: 50%;
+    margin-left: 60%;
+    margin-top: -5%;
+    display: none;
+    border-radius: 10px;
+    cursor: pointer;
+    /* padding: 2%; */
+}
+
 .showED{
     background-color: white;
     width: 30%;
@@ -83,11 +95,13 @@ input[type=email]:invalid{
     border-radius: 10px;
     /* padding: 2%; */
 }
-.showED p{
+.showED p, .showInfoDelete p{
     padding: 5%;
 }
-.showED p:hover{
+.showED p:hover, .showInfoDelete p:hover{
     background-color: #edecec;
+    border-radius: 10px;
+
 }
 
 header{
@@ -205,9 +219,9 @@ aside{
     background-color: #edecec;
     border-radius: 10px;
 }
-.list .deleteTag{
+/* .list .deleteTag{
     margin-left: 10%;
-}
+} */
 
 .circles{
     width: 17%;
@@ -238,7 +252,7 @@ main{
     padding: 5%;
     display: flex;
     flex-direction: column;
-    white-space: pre-wrap;
+    /* white-space: pre-wrap; */
 }
 .grid-items h2{
     font-size: 1.5em;
