@@ -2,7 +2,9 @@
 
 <span>This app is responsible for adding, editing and deleting tasks that can be grouped in categories</span> <br>
 
-https://github.com/Hossanna/TODO-jquery/assets/70913083/ac9723dd-4edb-434b-8dd7-06b72d5a5cb1
+![Demo](assets/Todo-project.gif)
+
+<!-- https://github.com/Hossanna/TODO-jquery/assets/70913083/ac9723dd-4edb-434b-8dd7-06b72d5a5cb1 -->
 
 <span>Technologies used - HTML, CSS, JS, JQUERY, AJAX </span> <br>
 <a href="https://hossanna.github.io/TODO-jquery">Run the app</a>
